@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight, Moon, Sun } from "lucide-react";
-import { useTheme } from "../context/ThemeContext.tsx";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 
 export default function Navbar() {
-  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -89,9 +87,16 @@ export default function Navbar() {
           <a
             href="#"
             onClick={(e) => handleScrollTo(e, "#")}
-            className="font-display font-extrabold text-xl tracking-[0.25em] text-charcoal-950 dark:text-sand-100 uppercase transition-all duration-300 hover:scale-105"
+            className="flex items-center gap-3 group"
           >
-            Decorle
+            <img 
+              src="/logo/WhatsApp Image 2026-06-27 at 17.03.05.jpeg" 
+              alt="Decorle Logo" 
+              className="h-9 w-9 rounded-full object-cover border border-charcoal-950/10 dark:border-white/10 transition-transform duration-300 group-hover:scale-105" 
+            />
+            <span className="font-display font-bold text-lg tracking-[0.2em] text-charcoal-950 dark:text-sand-100 uppercase transition-colors duration-300 group-hover:text-sand-500">
+              Decorle
+            </span>
           </a>
 
           {/* Desktop Nav Links with Sliding Hover Pill & Active Underline */}
@@ -132,17 +137,8 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop CTA & Theme Toggle */}
-          <div className="hidden md:flex items-center gap-4">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="p-2.5 rounded-full hover:bg-charcoal-950/5 dark:hover:bg-white/5 text-charcoal-950 dark:text-sand-100 transition-colors cursor-pointer"
-              aria-label="Toggle theme"
-            >
-              {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-            </button>
-
+          {/* Desktop CTA */}
+          <div className="hidden md:block">
             <a
               href="https://wa.me/919605389002"
               target="_blank"
@@ -154,23 +150,14 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile Menu & Theme Toggle */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 text-charcoal-950 dark:text-sand-100 hover:text-sand-600 transition-colors cursor-pointer"
-              aria-label="Toggle theme"
-            >
-              {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-            </button>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-charcoal-950 dark:text-sand-100 hover:text-sand-600 transition-colors"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-charcoal-950 dark:text-sand-100 hover:text-sand-600 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </motion.nav>
       </div>
 

@@ -167,6 +167,11 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               className="flex flex-col items-center gap-6"
             >
+              <img 
+                src="/logo/WhatsApp Image 2026-06-27 at 17.03.05.jpeg" 
+                alt="Decorle Logo" 
+                className="h-20 w-20 rounded-full object-cover border border-charcoal-950/10 shadow-lg animate-pulse" 
+              />
               <span className="font-display text-4xl font-bold tracking-[0.25em] uppercase text-charcoal-950">
                 Decorle
               </span>

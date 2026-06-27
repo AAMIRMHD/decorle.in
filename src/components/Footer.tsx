@@ -23,11 +23,18 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 md:mb-24">
           {/* Brand Info */}
           <div className="md:col-span-5 flex flex-col gap-6">
-            <h4 className={`font-display text-lg font-bold tracking-[0.2em] uppercase ${
-              theme === "dark" ? "text-sand-100" : "text-charcoal-950"
-            }`}>
-              Decorle
-            </h4>
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo/WhatsApp Image 2026-06-27 at 17.03.05.jpeg" 
+                alt="Decorle Logo" 
+                className="h-9 w-9 rounded-full object-cover border border-charcoal-950/10 dark:border-white/10" 
+              />
+              <h4 className={`font-display text-lg font-bold tracking-[0.2em] uppercase ${
+                theme === "dark" ? "text-sand-100" : "text-charcoal-950"
+              }`}>
+                Decorle
+              </h4>
+            </div>
             <p className={`max-w-sm leading-relaxed ${
               theme === "dark" ? "text-sand-300/40" : "text-charcoal-900/80"
             }`}>
