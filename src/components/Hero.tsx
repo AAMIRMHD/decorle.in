@@ -187,7 +187,7 @@ export default function Hero() {
           {/* Canvas Rendering Area */}
           <canvas 
             ref={canvasRef} 
-            className="absolute inset-0 w-full h-full object-cover opacity-100" 
+            className="absolute inset-0 w-full h-full object-cover opacity-70" 
             style={{ imageRendering: "-webkit-optimize-contrast" }}
           />
 
