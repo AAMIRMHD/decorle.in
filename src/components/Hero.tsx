@@ -13,6 +13,8 @@ export default function Hero() {
 
   const numFrames = 120;
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   // Preload images asynchronously on mount
   useEffect(() => {
@@ -65,7 +67,13 @@ export default function Hero() {
     if (!canvas) return;
     const imgList = imagesRef.current;
     if (imgList.length === 0) return;
-    const ctx = canvas.getContext("2d");
+    
+    // Cache the context to avoid re-querying on every frame
+    let ctx = ctxRef.current;
+    if (!ctx) {
+      ctx = canvas.getContext("2d");
+      ctxRef.current = ctx;
+    }
     if (!ctx) return;
 
     const img = imgList[index];
@@ -90,11 +98,18 @@ export default function Hero() {
     }
   };
 
-  // Re-draw when scroll position updates
+  // Re-draw when scroll position updates (using requestAnimationFrame for smooth 60/120fps sync)
   useMotionValueEvent(frameIndex, "change", (latest) => {
     if (!imagesLoaded) return;
     const index = Math.min(numFrames - 1, Math.max(0, Math.floor(latest) - 1));
-    drawFrame(index);
+    
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
+    
+    rafRef.current = requestAnimationFrame(() => {
+      drawFrame(index);
+    });
   });
 
   // Handle canvas sizing and initial frame rendering
@@ -102,11 +117,16 @@ export default function Hero() {
     const handleResize = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
       
-      // Draw first or current frame on resize
+      // Optimize: Disable devicePixelRatio multiplier. Resizing resolution to match CSS width/height
+      // reduces canvas pixel workload by 4x-9x, eliminating resizing/scrolling lag on high-DPI displays.
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      // Reset context cache since resizing clears canvas context state
+      ctxRef.current = canvas.getContext("2d");
+      
+      // Draw current frame on resize
       if (imagesLoaded && imagesRef.current.length > 0) {
         const index = Math.min(numFrames - 1, Math.max(0, Math.floor(frameIndex.get()) - 1));
         drawFrame(index);
@@ -116,7 +136,12 @@ export default function Hero() {
     window.addEventListener("resize", handleResize);
     handleResize();
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
   }, [imagesLoaded]);
 
   // Initial draw when preloading completes
@@ -207,22 +232,16 @@ export default function Hero() {
               className="absolute left-6 md:left-12 max-w-2xl flex flex-col items-start text-left"
             >
               <div className="flex items-center gap-2 mb-4">
-                <span className={`w-1.5 h-1.5 rounded-full ${theme === "dark" ? "bg-sand-400" : "bg-sand-600"}`} />
-                <p className={`font-sans text-xs md:text-sm font-bold tracking-[0.3em] uppercase ${
-                  theme === "dark" ? "text-sand-400" : "text-sand-600"
-                }`}>
+                <span className="w-1.5 h-1.5 rounded-full bg-sand-400" />
+                <p className="font-sans text-xs md:text-sm font-bold tracking-[0.3em] uppercase text-sand-400 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                   Decorle Spaces
                 </p>
               </div>
-              <h1 className={`font-display font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] ${
-                theme === "dark" ? "text-white" : "text-charcoal-950"
-              }`}>
+              <h1 className="font-display font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.2)]">
                 Sculpting Spaces, <br />
                 Elevating Lifestyles.
               </h1>
-              <p className={`font-sans font-semibold text-sm md:text-lg max-w-xl mt-6 leading-relaxed ${
-                theme === "dark" ? "text-sand-100" : "text-charcoal-900"
-              }`}>
+              <p className="font-sans font-semibold text-sm md:text-lg max-w-xl mt-6 leading-relaxed text-white/90 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 Scroll down to enter our digital sensory experience and explore how we shape 
                 matter, light, and geometry.
               </p>
@@ -233,19 +252,13 @@ export default function Hero() {
               style={{ opacity: opacity2, y: y2, display: display2 }}
               className="absolute right-6 md:right-12 max-w-xl flex flex-col items-end text-right"
             >
-              <span className={`font-sans text-xs font-bold tracking-[0.2em] block mb-4 ${
-                theme === "dark" ? "text-sand-400" : "text-sand-600"
-              }`}>
+              <span className="font-sans text-xs font-bold tracking-[0.2em] block mb-4 text-sand-400 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 01 / ARCHITECTURAL INTEGRITY
               </span>
-              <h2 className={`font-display font-bold text-4xl md:text-6xl tracking-tight leading-tight mb-4 ${
-                theme === "dark" ? "text-white" : "text-charcoal-950"
-              }`}>
+              <h2 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-tight mb-4 text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.2)]">
                 Turnkey Execution
               </h2>
-              <p className={`font-sans font-semibold text-sm md:text-base leading-relaxed max-w-md ${
-                theme === "dark" ? "text-sand-100" : "text-charcoal-900"
-              }`}>
+              <p className="font-sans font-semibold text-sm md:text-base leading-relaxed max-w-md text-white/90 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 We handle the entire journey: from initial spatial planning and 3D renders to 
                 on-site coordination, technical drafting, and the final structural reveal.
               </p>
@@ -256,19 +269,13 @@ export default function Hero() {
               style={{ opacity: opacity3, y: y3, display: display3 }}
               className="absolute left-6 md:left-12 max-w-xl flex flex-col items-start text-left"
             >
-              <span className={`font-sans text-xs font-bold tracking-[0.2em] block mb-4 ${
-                theme === "dark" ? "text-sand-400" : "text-sand-600"
-              }`}>
+              <span className="font-sans text-xs font-bold tracking-[0.2em] block mb-4 text-sand-400 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 02 / THE TACTILE CANVAS
               </span>
-              <h2 className={`font-display font-bold text-4xl md:text-6xl tracking-tight leading-tight mb-4 ${
-                theme === "dark" ? "text-white" : "text-charcoal-950"
-              }`}>
+              <h2 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-tight mb-4 text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.2)]">
                 Artisan Finishes
               </h2>
-              <p className={`font-sans font-semibold text-sm md:text-base leading-relaxed max-w-md ${
-                theme === "dark" ? "text-sand-100" : "text-charcoal-900"
-              }`}>
+              <p className="font-sans font-semibold text-sm md:text-base leading-relaxed max-w-md text-white/90 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 Walls should not be silent. Our custom painting, lime plasters, and microcement 
                 overlays absorb and reflect natural daylight, bringing emotional warmth.
               </p>
@@ -279,19 +286,13 @@ export default function Hero() {
               style={{ opacity: opacity4, y: y4, display: display4 }}
               className="absolute right-6 md:right-12 max-w-xl flex flex-col items-end text-right"
             >
-              <span className={`font-sans text-xs font-bold tracking-[0.2em] block mb-4 ${
-                theme === "dark" ? "text-sand-400" : "text-sand-600"
-              }`}>
+              <span className="font-sans text-xs font-bold tracking-[0.2em] block mb-4 text-sand-400 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 03 / BESPOKE TAILORING
               </span>
-              <h2 className={`font-display font-bold text-4xl md:text-6xl tracking-tight leading-tight mb-4 ${
-                theme === "dark" ? "text-white" : "text-charcoal-950"
-              }`}>
+              <h2 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-tight mb-4 text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.2)]">
                 Custom Essentials
               </h2>
-              <p className={`font-sans font-semibold text-sm md:text-base leading-relaxed max-w-md mb-6 ${
-                theme === "dark" ? "text-sand-100" : "text-charcoal-900"
-              }`}>
+              <p className="font-sans font-semibold text-sm md:text-base leading-relaxed max-w-md mb-6 text-white/90 drop-shadow-[0_1px_5px_rgba(0,0,0,0.15)]">
                 Modular kitchens, loose wood credenzas, wardrobes, and minimalist details 
                 crafted specifically for your project's physical proportions.
               </p>
