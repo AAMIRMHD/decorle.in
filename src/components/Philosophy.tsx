@@ -89,7 +89,7 @@ export default function Philosophy() {
             className="absolute inset-0 w-full h-[120%]"
           >
             <img
-              src="/philosophy_interior.png"
+              src="/philosophy_interior.jpg"
               alt="Bespoke Luxury Interior Lounge Design"
               className="w-full h-full object-cover"
             />

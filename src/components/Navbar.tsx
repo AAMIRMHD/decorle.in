@@ -59,7 +59,7 @@ export default function Navbar() {
     { name: "Services", href: "#services" },
     { name: "Contact", href: "#contact" },
   ];
-
+ 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);

@@ -19,7 +19,7 @@ const servicesData: ServiceItem[] = [
     title: "Customised Sofa Design",
     description:
       "Handcrafted, ergonomically tailored sofas designed to fit your room's precise dimensions. We select luxury textiles, custom cushioning, and solid wood frames.",
-    image: "/service_sofa.png",
+    image: "/service_sofa.jpg",
     features: [
       "Bespoke Dimensional Scaling",
       "Premium Leather & Fabric curation",
@@ -33,7 +33,7 @@ const servicesData: ServiceItem[] = [
     title: "Premium Interior Design & Execution",
     description:
       "End-to-end turnkey architectural interiors. From spatial planning and 3D visual renders to meticulous material curation, project management, and final execution.",
-    image: "/service_bedroom.png",
+    image: "/service_bedroom.jpg",
     features: [
       "Full Turnkey Execution",
       "3D Spatial Renders & Planning",
@@ -47,7 +47,7 @@ const servicesData: ServiceItem[] = [
     title: "Custom Home Essentials Crafting",
     description:
       "Bespoke wood styling, custom-designed loose furniture, minimal kitchen cabinetry, built-in wardrobes, and unique decor pieces tailored exactly to your layout.",
-    image: "/service_tv_room.png",
+    image: "/service_tv_room.jpg",
     features: [
       "Bespoke Modular Kitchens",
       "Handcrafted Hardwood Furniture",

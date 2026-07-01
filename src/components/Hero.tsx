@@ -11,7 +11,7 @@ export default function Hero() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [loadingComplete, setLoadingComplete] = useState(false);
 
-  const numFrames = 240;
+  const numFrames = 120;
   const imagesRef = useRef<HTMLImageElement[]>([]);
 
   // Preload images asynchronously on mount
@@ -23,8 +23,8 @@ export default function Hero() {
       const promises = Array.from({ length: numFrames }, (_, i) => {
         return new Promise<void>((resolve) => {
           const img = new Image();
-          const frameNum = String(i + 1).padStart(3, "0");
-          img.src = `/hero/ezgif-frame-${frameNum}.png`;
+          const frameNum = String((i * 2) + 2).padStart(3, "0");
+          img.src = `/hero/ezgif-frame-${frameNum}.jpg`;
           img.onload = () => {
             loadedCount++;
             setLoadProgress(Math.round((loadedCount / numFrames) * 100));
